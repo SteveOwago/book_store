@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\BookController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,7 +21,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::group(['middleware' => 'auth:sanctum'], function() {
+Route::group(['middleware' => 'auth:sanctum'], function () {
     //Posts
-    Route::resource('books',BookController::class);
+    Route::post('books/issue_book/{book_id}', [BookController::class,'issueBook'])->name('books.issue');
+    Route::post('books/apply_book_loan/', [BookController::class,'applyBookLoan'])->name('books.apply');
+    Route::resource('books', BookController::class);
+    Route::post('/auth/register', [AuthController::class, 'register']);
+    Route::post('/auth/logout', [AuthController::class, 'logout']);
 });
+
+
+Route::post('/auth/login', [AuthController::class, 'login']);
+Route::get('/auth/login', [AuthController::class, 'loginPage'])->name('login');
+
+
